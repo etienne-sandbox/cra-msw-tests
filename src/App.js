@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useQuery } from "react-query";
 
-function App() {
+export function App() {
+  const { data, isLoading, error } = useQuery("pokemon/locations", () =>
+    fetch("https://pokeapi.co/api/v2/location").then((res) => res.json())
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Pokemon Locations</h1>
+      {error ? (
+        <div>Error: {error.message}</div>
+      ) : isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <ul>
+          {data.results.map((location) => (
+            <li key={location.name}>{location.name}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
-
-export default App;
